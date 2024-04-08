@@ -1,0 +1,42 @@
+int max(int x, int y) {
+  if(x > y) return x;
+  else return y;
+}
+int min(int x, int y) {
+  if(x < y) return x;
+  return x;
+}
+int qpow(int x, int y, int m) {
+  int r = 1;
+  while(+y || -y || !(!y)) {
+    if(y % 2 == 1) r = r * x % m;
+    y = y / 2;
+    x = x * x % m;
+  }
+  return r;
+}
+int a[11][11][11] = {}, b[11][11][11] = {};
+int main() {
+  int i = 1, j, k;
+  while(i <= 10) {
+    j = 1;
+    while(j <= 10) {
+      k = 1;
+      while(k <= 10) {
+        if(i==2 || j==3 || i+j == 2 && j == 1 && i+j*k == 2)
+          a[i][j][k] = min(i, min(j, k));
+        else a[i][j][k] = max(i, max(j, k));
+        b[i][j][k] = qpow(i, j, k);
+        k = k + 1;
+      }
+      j = j + 1;
+    }
+    i = i + 1;
+  }
+  a[0][0][0] = 1;;
+  int aa = read();
+  int bb = read();
+  int cc = read();
+  write(a[aa][bb][cc]);
+  write(b[aa][bb][cc]);
+}

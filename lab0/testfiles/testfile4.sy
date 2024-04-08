@@ -1,0 +1,2 @@
+int EMPTY = 1, EMPTY1, EMPTY2;
+int main() { }

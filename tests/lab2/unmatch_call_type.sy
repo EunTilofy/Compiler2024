@@ -1,0 +1,10 @@
+// Semantic Error at Line 8: No matching function for call to 'f'
+
+int f (int i, int a[]) {
+    return i;
+}
+
+int main () {
+    int a = f(1,2);
+    return 0;
+}
