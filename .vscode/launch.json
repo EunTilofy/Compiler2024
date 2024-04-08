@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/pac/Documents/2024-sp/Compiler/sp24-starter/src/lab0",
-      "program": "/Users/pac/Documents/2024-sp/Compiler/sp24-starter/src/lab0/build/Debug/outDebug"
+      "cwd": "/Users/pac/Documents/2024-sp/Compiler/sp24-starter/src",
+      "program": "/Users/pac/Documents/2024-sp/Compiler/sp24-starter/src/build/Debug/outDebug"
     }
   ]
 }
