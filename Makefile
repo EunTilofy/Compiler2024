@@ -41,3 +41,11 @@ clean:
 
 submit:
 	zip -r submit.zip $(SRC_DIR)
+
+LAB2TESTS := $(wildcard tests/lab2/*sy)
+
+lab2:
+	@for file in $(LAB2TESTS); do \
+		echo "./compiler $$file"; \
+		./compiler $$file; \
+	done
