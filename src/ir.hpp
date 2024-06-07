@@ -28,6 +28,7 @@ string upd_op(string op)
     if(op == "SUB") return "-"; if(op == "LT")  return "<";  if(op == "NEQ") return "!=";
     if(op == "MUL") return "*"; if(op == "LE")  return "<="; if(op == "EQ")  return "==";
     if(op == "DIV") return "/"; if(op == "GT")  return ">"; 
+    if(op == "NEG") return "-";
     return "##ERROR##";
 }
 
@@ -66,7 +67,7 @@ class info_assign_const : public IR_info
 public:
     IR_info* clone() const { return new info_assign_const(*this); }
     string lv; int rv;
-    info_assign_const(string lv, int rv) : lv(lv), rv(rv) { IR_info::type = "ASSIGN"; }
+    info_assign_const(string lv, int rv) : lv(lv), rv(rv) { IR_info::type = "ASSIGN const"; }
     void print(ostream& OUT) const { OUT << lv << " = #" << rv << "\n"; }
 };
 
@@ -84,7 +85,7 @@ class info_assign_addr : public IR_info
 public:
     IR_info* clone() const { return new info_assign_addr(*this); }
     string lv, rv;
-    info_assign_addr(string lv, string rv) : lv(lv), rv(rv) { IR_info::type = "ASSIGN"; }
+    info_assign_addr(string lv, string rv) : lv(lv), rv(rv) { IR_info::type = "ASSIGN addr"; }
     void print(ostream& OUT) const { OUT << lv << " = &" << rv << "\n"; }
 };
 
@@ -93,7 +94,7 @@ class info_assign_load : public IR_info
 public:
     IR_info* clone() const { return new info_assign_load(*this); }
     string lv, rv;
-    info_assign_load(string lv, string rv) : lv(lv), rv(rv) { IR_info::type = "ASSIGN"; }
+    info_assign_load(string lv, string rv) : lv(lv), rv(rv) { IR_info::type = "ASSIGN load"; }
     void print(ostream& OUT) const { OUT << lv << " = *" << rv << "\n"; }
 };
 
@@ -102,7 +103,7 @@ class info_assign_store : public IR_info
 public:
     IR_info* clone() const { return new info_assign_store(*this); }
     string lv, rv;
-    info_assign_store(string lv, string rv) : lv(lv), rv(rv) { IR_info::type = "ASSIGN"; }
+    info_assign_store(string lv, string rv) : lv(lv), rv(rv) { IR_info::type = "ASSIGN store"; }
     void print(ostream& OUT) const { OUT << "*" << lv << " = " << rv << "\n"; }
 };
 
@@ -111,7 +112,7 @@ class info_assign_unary : public IR_info
 public:
     IR_info* clone() const { return new info_assign_unary(*this); }
     string lv, op, rv;
-    info_assign_unary(string lv, string op, string rv) : lv(lv), op(op), rv(rv) { IR_info::type = "ASSIGN"; }
+    info_assign_unary(string lv, string op, string rv) : lv(lv), op(op), rv(rv) { IR_info::type = "ASSIGN unary"; }
     void print(ostream& OUT) const { OUT << lv << " = " << (upd_op(op)+" "+rv) << "\n"; }
 };
 
@@ -120,7 +121,7 @@ class info_assign_binary : public IR_info
 public:
     IR_info* clone() const { return new info_assign_binary(*this); }
     string lv, v1, op, v2;
-    info_assign_binary(string lv, string v1, string op, string v2) : lv(lv), v1(v1), op(op), v2(v2) { IR_info::type = "ASSIGN"; }
+    info_assign_binary(string lv, string v1, string op, string v2) : lv(lv), v1(v1), op(op), v2(v2) { IR_info::type = "ASSIGN binary"; }
     void print(ostream &OUT) const { OUT << lv << " = " << (v1+" "+upd_op(op)+" "+v2) << "\n"; }
 };
 
@@ -175,7 +176,7 @@ class info_assign_call : public IR_info
 public:
     IR_info* clone() const { return new info_assign_call(*this); }
     string lv, name;
-    info_assign_call(string lv, string name) : lv(lv), name(name) { IR_info::type = "ASSIGN"; }
+    info_assign_call(string lv, string name) : lv(lv), name(name) { IR_info::type = "ASSIGN call"; }
     void print(ostream &OUT) const { OUT << lv << " = CALL " << name << "\n"; }
 };
 
@@ -231,6 +232,15 @@ public:
     IR() : info(nullptr) { type = "NULL"; }
     IR(IR_info *o) : type(o->type), info(unique_ptr<IR_info>(o)) { }
     IR(const IR& o) : type(o.type), info(o.info ? o.info->clone() : nullptr), child(o.child) {}
+
+    IR& operator=(const IR& o) {
+        if (this != &o) {
+            type = o.type;
+            info = unique_ptr<IR_info>(o.info ? o.info->clone() : nullptr);
+            child = o.child;
+        }
+        return *this;
+    }
 
     void merge(const IR& o) 
     {
