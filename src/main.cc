@@ -2,6 +2,7 @@
 #include "tree.hpp"
 #include "semantic.hpp"
 #include "ir.hpp"
+#include "asm.hpp"
 using namespace std;
 extern int yydebug;
 extern int yyparse();
@@ -38,13 +39,18 @@ int main(int argc, char **argv)
 	}
 
 	// Root->print(0);
-	string IR_OUT = "ir.out";
-	if(argc >= 3) IR_OUT = string(argv[2]);
+	// string IR_OUT = "ir.out";
+	// if(argc >= 3) IR_OUT = string(argv[2]);
 	IR ir(&checker, Root);
-	ofstream ir_out(IR_OUT);
-	ir.print(ir_out);
+	// ofstream ir_out(IR_OUT);
+	// ir.print(ir_out);
 	// ir.print(cerr);
 
+	string ASM_OUT = "asm.out";
+	if (argc >= 3) ASM_OUT = string(argv[2]);
+	ofstream asm_out(ASM_OUT);
+	ASM _asm(ir);
+	_asm.print(asm_out);
 
 	std::cerr << "\nParse success !" << std::endl;
     fclose(yyin);

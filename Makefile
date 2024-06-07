@@ -18,6 +18,11 @@ YHEADER = $(YCCFILE:.cc=.hh)
 LOBJ = $(LCCFILE:.cc=.o)
 YOBJ = $(YCCFILE:.cc=.o)
 
+clean:
+	rm -f $(LCCFILE) $(YCCFILE) $(YHEADER)
+	rm -f $(OBJS)
+	rm -f compiler
+
 compiler: $(LOBJ) $(YOBJ) $(OBJS)
 	$(CXX) -o $@ $^
 
@@ -34,10 +39,6 @@ $(LCCFILE): $(LFILE) $(YHEADER)
 	$(FLEX) -o $@ $<
 
 .PHONY: clean submit
-clean:
-	rm -f $(LCCFILE) $(YCCFILE) $(YHEADER)
-	rm -f $(OBJS)
-	rm -f compiler
 
 submit:
 	zip -r submit.zip $(SRC_DIR) Makefile
